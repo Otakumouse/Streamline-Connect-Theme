@@ -507,6 +507,7 @@ body:not(.home) .site-header, .site-header.is-menu-open, .site-header.is-capabil
 .mega {
 	background: var(--white);
 	border-bottom: 1px solid var(--line);
+	border-top: 1px solid var(--line);
 	color: var(--ink);
 	display: flex;
 	left: 0;
@@ -1773,9 +1774,10 @@ body:not(.home) .site-header, .site-header.is-menu-open, .site-header.is-capabil
 }
 
 /* Small uppercase label in the footer. */
-.accreditations p, .footer-col > p {
+.accreditations p, .footer-col > h2 {
 	color: var(--grey-700);
 	font-size: 12px;
+	font-weight: 400;
 	line-height: 1.4;
 	text-transform: uppercase;
 }

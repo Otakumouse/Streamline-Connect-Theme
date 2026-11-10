@@ -8,6 +8,7 @@
 get_header();
 ?>
 <main id="main" class="page-main">
+	<!-- Missing page: heading, explanation, then the home link. -->
 	<div class="wrap narrow">
 		<h1><?php esc_html_e( 'Page not found', 'streamlineconnect' ); ?></h1>
 		<p><?php esc_html_e( 'That page is not on the site. You can return home or talk to us about a project.', 'streamlineconnect' ); ?></p>
