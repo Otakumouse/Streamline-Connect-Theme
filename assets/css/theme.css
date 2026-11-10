@@ -1,0 +1,1961 @@
+/* Design tokens: colour, type, spacing, and the shared motion values. */
+:root {
+	--content: 1808px;
+	--duration: 500ms;
+	--ease: cubic-bezier(0.22, 1, 0.36, 1);
+	--font-body: Aptos, "Segoe UI", sans-serif;
+	--font-display: "Montserrat", sans-serif;
+	--grey-100: #f4f6f8;
+	--grey-300: #d9dee5;
+	--grey-500: #5a6472;
+	--grey-700: #2b3645;
+	--gutter: 56px;
+	--header: 80px;
+	--ink: #0f1b2d;
+	--jump-line: #e7e7eb;
+	--line: #d9dee5;
+	--line-inverse: #33325a;
+	--navy-200: #cbcad3;
+	--navy-900: #111036;
+	--orange-50: #fef5ee;
+	--orange-500: #f57f27;
+	--orange-600: #d36d22;
+	--section: 112px;
+	--shift: 20px;
+	--stagger: 80ms;
+	--white: #fff;
+}
+
+@media (max-width: 1919px) {
+	:root {
+		--gutter: 40px;
+		--section: 96px;
+	}
+}
+
+@media (max-width: 1439px) {
+	:root {
+		--gutter: 32px;
+		--section: 80px;
+	}
+}
+
+@media (max-width: 767px) {
+	:root {
+		--gutter: 24px;
+		--section: 64px;
+	}
+}
+
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+/* Smooth in-page scrolling. Reduced motion turns it off in the query below. */
+html {
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+/*
+ * One motion system for the whole page.
+ * --duration, --ease, --shift, and --stagger are shared by the hero,
+ * the scrolling sections, and the button hovers.
+ * data-reveal fades a block up. --i staggers it.
+ * data-reveal-on="load" is the hero, played once the first frame has painted.
+ * .is-revealed is added by the script. Without "js" on <html>, nothing is hidden.
+ */
+.js [data-reveal]:not(.is-revealed) {
+	opacity: 0;
+	transform: translateY(var(--shift));
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.js [data-reveal] {
+		opacity: 1 !important;
+		transform: none !important;
+	}
+}
+
+.js [data-reveal].is-revealed {
+	animation: reveal-up var(--duration) var(--ease) both;
+	animation-delay: calc(var(--i, 0) * var(--stagger));
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.js [data-reveal].is-revealed {
+		animation: none;
+	}
+}
+
+@keyframes reveal-up {
+	from {
+		opacity: 0;
+		transform: translateY(var(--shift));
+	}
+
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+/* Hero photograph and scrim use the same duration and easing, as a fade. */
+.js .hero-photo,
+.js .hero-scrim {
+	animation: hero-fade var(--duration) var(--ease) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.js .hero-photo,
+	.js .hero-scrim {
+		animation: none;
+	}
+}
+
+@keyframes hero-fade {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+/* Base page colour and body type. */
+body {
+	background: var(--white);
+	color: var(--ink);
+	font-family: var(--font-body);
+	font-size: 16px;
+	line-height: 1.5;
+	margin: 0;
+}
+
+/* Stops the page scrolling while a menu is open. */
+body.nav-lock {
+	overflow: hidden;
+}
+
+/* Images stay inside their box and keep their ratio. */
+img {
+	height: auto;
+	max-width: 100%;
+}
+
+/* Buttons and links use the body typeface. */
+button, a {
+	font-family: inherit;
+}
+
+/* Controls show the pointer. */
+button {
+	cursor: pointer;
+}
+
+p, h1, h2, h3, ul, ol, dl, dd {
+	margin: 0;
+}
+
+ul, ol {
+	list-style: none;
+	padding: 0;
+}
+
+:focus {
+	outline: none;
+}
+
+:focus-visible {
+	outline: 2px solid var(--orange-500);
+	outline-offset: 2px;
+}
+
+/* Skip link. It sits off screen until it receives focus. */
+.skip-link {
+	background: var(--white);
+	color: var(--navy-900);
+	left: 16px;
+	padding: 12px 16px;
+	position: absolute;
+	text-decoration: none;
+	top: -48px;
+	z-index: 80;
+}
+
+.skip-link:focus {
+	top: 16px;
+}
+
+/* Centred content column. Width follows the page gutter. */
+.wrap {
+	margin-inline: auto;
+	width: min(var(--content), calc(100% - (var(--gutter) * 2)));
+}
+
+/* Small decorative icon. It does not scale with the image rule. */
+.icon {
+	display: block;
+	flex: none;
+	height: 12px;
+	max-width: none;
+	width: 12px;
+}
+
+/* Hero speed-stripe marker. Decorative. */
+.stripes {
+	display: block;
+	height: 8px;
+	max-width: none;
+	width: 24px;
+}
+
+/* Navy filled button. Used for Discuss your project. */
+.btn {
+	align-items: center;
+	background: var(--navy-900);
+	color: var(--white);
+	display: inline-flex;
+	font-size: 16px;
+	font-weight: 600;
+	gap: 12px;
+	justify-content: space-between;
+	letter-spacing: 0;
+	line-height: 1.4;
+	min-height: 44px;
+	padding: 16px 24px;
+	text-decoration: none;
+	text-transform: uppercase;
+	transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease);
+}
+
+/* Navy buttons shift to orange, with navy type. */
+.btn:hover,
+.btn:focus-visible {
+	background: var(--orange-500);
+	color: var(--navy-900);
+}
+
+/* Makes a navy button fill its container. */
+.btn--block {
+	width: 100%;
+}
+
+/* Uppercase text link with an arrow. */
+.text-link {
+	align-items: center;
+	color: var(--navy-900);
+	display: inline-flex;
+	font-size: 16px;
+	font-weight: 600;
+	gap: 8px;
+	line-height: 1.4;
+	min-height: 44px;
+	text-decoration: none;
+	text-transform: uppercase;
+	transition: color var(--duration) var(--ease);
+}
+
+/* Text link on a navy background. */
+.text-link--light {
+	color: var(--white);
+}
+
+.text-link:hover, .text-link:focus-visible, .footer-col a:hover, .footer-col a:focus-visible, .mega-list a:hover, .mega-list a:focus-visible, .mega-heading:hover, .mega-heading:focus-visible, .mega-all:hover, .mega-all:focus-visible {
+	color: var(--orange-500);
+}
+
+.btn .icon,
+.bar-link .icon,
+.text-link .icon {
+	transition: transform var(--duration) var(--ease);
+}
+
+.btn:hover .icon,
+.btn:focus-visible .icon,
+.bar-link:hover .icon,
+.bar-link:focus-visible .icon,
+.text-link:hover .icon,
+.text-link:focus-visible .icon {
+	transform: translateX(4px);
+}
+
+/* Vertical padding for a homepage section. */
+.section {
+	padding: var(--section) 0;
+}
+
+/* Light grey section ground. */
+.section--grey {
+	background: var(--grey-100);
+}
+
+/* Navy section ground with white type. */
+.section--navy {
+	background: var(--navy-900);
+	color: var(--white);
+}
+
+/* Section heading, and the title on interior pages. */
+.section-heading, .page-main h1 {
+	color: var(--navy-900);
+	font-family: var(--font-display);
+	font-size: clamp(32px, 2.5vw, 48px);
+	font-weight: 700;
+	letter-spacing: -0.04em;
+	line-height: 1.16;
+	scroll-margin-top: 24px;
+}
+
+.section--navy .section-heading, .built-copy h2 {
+	color: var(--white);
+}
+
+.section-heading:focus {
+	outline: none;
+}
+
+.section-heading:focus-visible {
+	outline: 2px solid var(--orange-500);
+	outline-offset: 4px;
+}
+
+/* Site header. It sits above the page and the open menu. */
+.site-header {
+	background: var(--white);
+	position: relative;
+	z-index: 40;
+}
+
+body:not(.home) .site-header, .site-header.is-menu-open, .site-header.is-capabilities-open {
+	border-bottom: 1px solid var(--line);
+}
+
+.site-header:focus {
+	outline: none;
+}
+
+/* Header row: logo, navigation, and the discuss button. */
+.header-bar {
+	align-items: stretch;
+	display: flex;
+	height: var(--header);
+}
+
+/* Logo link. It lines up with the content column. */
+.logo {
+	align-items: center;
+	display: flex;
+	max-width: calc(100% - 88px);
+	padding-left: max(var(--gutter), calc((100vw - var(--content)) / 2));
+	text-decoration: none;
+}
+
+/* Logo artwork at the size drawn in the header and footer. */
+.logo img {
+	height: 30.545px;
+	max-width: 100%;
+	width: 240px;
+}
+
+/* Menu button. It replaces the navigation below 1440px. */
+.menu-toggle {
+	align-self: center;
+	background: var(--white);
+	border: 1px solid var(--line);
+	color: var(--ink);
+	display: none;
+	font-size: 16px;
+	letter-spacing: -0.04em;
+	margin-left: auto;
+	margin-right: var(--gutter);
+	min-height: 44px;
+	min-width: 44px;
+	padding: 0 16px;
+}
+
+@media (max-width: 1439px) {
+	.menu-toggle {
+		align-items: center;
+		display: inline-flex;
+		justify-content: center;
+	}
+}
+
+/* Primary navigation. Id hook: #site_nav. */
+.site-nav {
+	align-items: stretch;
+	display: flex;
+	height: 100%;
+	margin-left: auto;
+}
+
+@media (max-width: 1439px) {
+	.site-nav {
+		display: none;
+	}
+}
+
+/* Discuss button at the top of the mobile menu. */
+.nav-cta--menu {
+	display: none;
+}
+
+@media (max-width: 1439px) {
+	.nav-cta--menu {
+		display: flex;
+		margin: 16px var(--gutter);
+	}
+}
+
+/* Header navigation cell. The button opens Capabilities. */
+.nav-button, .nav-link {
+	align-items: center;
+	background: transparent;
+	border: 0;
+	border-right: 1px solid var(--line);
+	color: var(--ink);
+	display: flex;
+	font-size: 16px;
+	gap: 4px;
+	height: 100%;
+	justify-content: center;
+	letter-spacing: -0.04em;
+	line-height: 1.5;
+	padding: 0 24px;
+	text-decoration: none;
+	transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease);
+	width: 160px;
+}
+
+@media (max-width: 1439px) {
+	.nav-button, .nav-link {
+		border-bottom: 1px solid var(--line);
+		border-left: 0;
+		border-right: 0;
+		justify-content: space-between;
+		min-height: 56px;
+		padding: 16px var(--gutter);
+		width: 100%;
+	}
+}
+
+/* Capabilities cell. It has a border on both sides. */
+.nav-button {
+	border-left: 1px solid var(--line);
+}
+
+@media (max-width: 1439px) {
+	.nav-button {
+		border-bottom: 1px solid var(--line);
+		border-left: 0;
+		border-right: 0;
+		justify-content: space-between;
+		min-height: 56px;
+		padding: 16px var(--gutter);
+		width: 100%;
+	}
+}
+
+.nav-button[aria-expanded="true"] {
+	background: var(--grey-100);
+}
+
+.nav-button[aria-expanded="true"] .icon {
+	transform: rotate(180deg);
+}
+
+.nav-link:hover, .nav-button:hover {
+	background: var(--grey-100);
+}
+
+/* Discuss button in the desktop header bar. */
+.nav-cta--bar {
+	border-radius: 0;
+	height: 100%;
+	padding-left: 40px;
+	padding-right: max(var(--gutter), calc((100vw - var(--content)) / 2));
+}
+
+@media (max-width: 1439px) {
+	.nav-cta--bar {
+		display: none;
+	}
+}
+
+/* Navy scrim behind an open menu. */
+.scrim {
+	background: rgba(17, 16, 54, 0.56);
+	border: 0;
+	inset: 0;
+	padding: 0;
+	position: fixed;
+	z-index: 30;
+}
+
+.scrim[hidden] {
+	display: none;
+}
+
+/* Capabilities menu panel. Id hook: #capabilities_menu. */
+.mega {
+	background: var(--white);
+	border-bottom: 1px solid var(--line);
+	color: var(--ink);
+	display: flex;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: var(--header);
+	z-index: 45;
+}
+
+@media (max-width: 1439px) {
+	.mega {
+		border-bottom: 0;
+		flex-direction: column;
+		position: static;
+	}
+}
+
+.mega[hidden] {
+	display: none;
+}
+
+/* Shared padding for the menu introduction and columns. */
+.mega-intro, .mega-col {
+	border-right: 1px solid var(--line);
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	justify-content: center;
+	padding: 40px 32px;
+}
+
+/* Capabilities introduction: title, summary, and the all-capabilities link. */
+.mega-intro {
+	flex: 0 0 514px;
+	gap: 20px;
+	padding-left: max(var(--gutter), calc((100vw - var(--content)) / 2));
+	padding-right: 40px;
+	width: 514px;
+}
+
+@media (max-width: 1439px) {
+	.mega-intro {
+		border-bottom: 1px solid var(--line);
+		border-right: 0;
+		flex: none;
+		padding: 24px var(--gutter) 32px;
+		width: auto;
+	}
+}
+
+/* One capability column in the menu. */
+.mega-col {
+	flex: 1;
+	min-width: 0;
+}
+
+@media (max-width: 1439px) {
+	.mega-col {
+		border-bottom: 1px solid var(--line);
+		border-right: 0;
+		flex: none;
+		padding: 24px var(--gutter) 32px;
+		width: auto;
+	}
+}
+
+.mega-col:last-child {
+	border-right: 0;
+}
+
+/* Menu title and column headings. */
+.mega-title, .mega-heading {
+	color: var(--navy-900);
+	font-family: var(--font-display);
+	font-weight: 700;
+	text-decoration: none;
+}
+
+/* Capabilities menu title. */
+.mega-title {
+	font-size: 40px;
+	letter-spacing: -0.04em;
+	line-height: 1.2;
+}
+
+@media (max-width: 1439px) {
+	.mega-title {
+		font-size: clamp(28px, 2.083vw, 40px);
+	}
+}
+
+/* Column heading inside the Capabilities menu. */
+.mega-heading {
+	color: var(--ink);
+	font-size: 24px;
+	font-weight: 600;
+	letter-spacing: -0.04em;
+	line-height: 1.25;
+}
+
+/* Supporting text in the Capabilities menu. */
+.mega-intro p, .mega-col p {
+	color: var(--grey-700);
+}
+
+/* All capabilities link. */
+.mega-all {
+	align-items: center;
+	color: var(--navy-900);
+	display: inline-flex;
+	font-size: 12px;
+	gap: 8px;
+	line-height: 1.5;
+	min-height: 44px;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+/* Child links under a capability column. */
+.mega-list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+/* One child link in the Capabilities menu. */
+.mega-list a {
+	align-items: center;
+	color: var(--grey-700);
+	display: flex;
+	font-weight: 600;
+	gap: 12px;
+	letter-spacing: -0.04em;
+	min-height: 44px;
+	text-decoration: none;
+}
+
+/* Orange marker before a menu child link. */
+.mega-list span {
+	color: var(--orange-500);
+}
+
+/* Home hero. The photograph, scrim, and copy stack in this frame. */
+.hero {
+	background: var(--navy-900);
+	color: var(--white);
+	display: flex;
+	flex-direction: column;
+	min-height: calc(100svh - var(--header));
+	overflow: hidden;
+	position: relative;
+}
+
+@media (min-width: 1920px) {
+	.hero {
+		height: 1000px;
+		min-height: 1000px;
+	}
+}
+
+@media (min-width: 1440px) and (max-width: 1919px) {
+	.hero {
+		height: calc(100svh - var(--header));
+		min-height: calc(100svh - var(--header));
+	}
+}
+
+@media (max-width: 1439px) {
+	.hero {
+		height: auto;
+		min-height: 100svh;
+	}
+}
+
+/* Hero photograph. Id may be set from the image field. */
+.hero-photo {
+	height: 100%;
+	inset: 0;
+	max-width: none;
+	object-fit: cover;
+	object-position: 62% 46%;
+	position: absolute;
+	width: 100%;
+}
+
+/* Navy scrim over the hero photograph. */
+.hero-scrim {
+	background: rgba(17, 16, 54, 0.5);
+	inset: 0;
+	position: absolute;
+}
+
+/* Hero content column. The marker sits at the top and the copy at the bottom. */
+.hero-body {
+	align-self: center;
+	display: flex;
+	flex: 1 0 auto;
+	flex-direction: column;
+	justify-content: space-between;
+	margin: 0 auto;
+	padding: var(--gutter) 0;
+	position: relative;
+	width: min(var(--content), calc(100% - (var(--gutter) * 2)));
+	z-index: 1;
+}
+
+/* Hero headline column and the On this page panel. */
+.hero-copy {
+	align-items: flex-end;
+	display: flex;
+	gap: 48px;
+	justify-content: space-between;
+}
+
+@media (max-width: 1439px) {
+	.hero-copy {
+		align-items: stretch;
+		flex-direction: column;
+	}
+}
+
+/* Hero headline and supporting text. */
+.hero-text {
+	max-width: 1197px;
+}
+
+/* Hero headline. Id hook: #hero_heading. */
+.hero-text h1 {
+	font-family: var(--font-display);
+	font-size: clamp(36px, 3.125vw, 60px);
+	font-weight: 700;
+	letter-spacing: -0.04em;
+	line-height: 1;
+}
+
+/* Hero supporting text. */
+.hero-text .hero-intro, .hero-text .hero-intro p {
+	font-size: clamp(16px, 1.042vw, 20px);
+	line-height: 1.5;
+	margin-top: 56px;
+	max-width: 739px;
+}
+
+@media (max-width: 1439px) {
+	.hero-text .hero-intro, .hero-text .hero-intro p {
+		margin-top: 32px;
+	}
+}
+
+/* On this page panel. */
+.jump {
+	background: var(--white);
+	color: var(--navy-900);
+	display: flex;
+	flex: 0 0 434px;
+	flex-direction: column;
+	gap: 24px;
+	max-width: 100%;
+	padding: 32px;
+	width: 434px;
+}
+
+@media (max-width: 1439px) {
+	.jump {
+		flex-basis: auto;
+		width: 100%;
+	}
+}
+
+/* On this page label. */
+.jump > p {
+	color: var(--grey-500);
+	font-size: 12px;
+	line-height: 1.4;
+	text-transform: uppercase;
+}
+
+/* Jump link inside the On this page panel. */
+.jump a {
+	align-items: center;
+	border-bottom: 1px solid var(--jump-line);
+	color: var(--navy-900);
+	display: flex;
+	font-family: var(--font-display);
+	font-size: 20px;
+	font-weight: 600;
+	gap: 16px;
+	justify-content: space-between;
+	line-height: 1.24;
+	min-height: 44px;
+	padding: 16px 0;
+	text-decoration: none;
+}
+
+/* Discuss button inside the On this page panel. */
+.jump .btn {
+	border-bottom: 0;
+	color: var(--white);
+	font-family: var(--font-body);
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.4;
+	padding: 16px 24px;
+	text-transform: uppercase;
+}
+
+.jump .btn:hover,
+.jump .btn:focus-visible {
+	background: var(--orange-500);
+	color: var(--navy-900);
+}
+
+.jump a .icon {
+	height: 20px;
+	width: 20px;
+}
+
+.jump .btn .icon {
+	height: 12px;
+	width: 12px;
+}
+
+/* Two-column row used by several sections. It stacks in the queries below each section. */
+.sectors-layout, .clients-layout, .built-layout, .section-intro, .enquiry-layout, .footer-top {
+	display: flex;
+	gap: 48px;
+	justify-content: space-between;
+}
+
+/* Where we deliver: heading beside the sector list. */
+.sectors-layout {
+	align-items: flex-start;
+}
+
+@media (max-width: 1199px) {
+	.sectors-layout {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 32px;
+	}
+}
+
+/* Where we deliver heading width. */
+.sectors-layout .section-heading {
+	flex: 0 0 434px;
+	width: min(434px, 100%);
+}
+
+@media (max-width: 1199px) {
+	.sectors-layout .section-heading {
+		flex-basis: auto;
+	}
+}
+
+/* List of sector rows. */
+.sector-list {
+	flex: 1;
+	width: min(1196px, 100%);
+}
+
+/* One sector row. The whole row is the link. */
+.sector {
+	align-items: center;
+	border-bottom: 1px solid var(--line);
+	color: inherit;
+	display: grid;
+	gap: 24px;
+	grid-template-columns: minmax(160px, 384px) minmax(0, 1fr) 16px;
+	min-height: 89px;
+	padding: 28px 24px 28px 0;
+	text-decoration: none;
+}
+
+@media (max-width: 767px) {
+	.sector {
+		grid-template-columns: 1fr 16px;
+	}
+}
+
+/* Sector name. */
+.sector-name {
+	color: var(--orange-500);
+	font-family: var(--font-display);
+	font-size: 24px;
+	font-weight: 600;
+	letter-spacing: -0.04em;
+	line-height: 1.32;
+}
+
+@media (max-width: 767px) {
+	.sector-name {
+		font-size: 22px;
+	}
+}
+
+/* Sector description. */
+.sector-text {
+	color: var(--grey-700);
+}
+
+@media (max-width: 767px) {
+	.sector-text {
+		grid-column: 1 / -1;
+	}
+}
+
+/* Arrow at the end of a sector row. */
+.sector .icon {
+	height: 16px;
+	width: 16px;
+}
+
+.sector:hover, .sector:focus-visible {
+	background: var(--grey-100);
+}
+
+/* Space under the What we deliver heading. */
+.capabilities .section-heading {
+	margin-bottom: 64px;
+}
+
+/* Three capability cards. */
+.card-grid {
+	display: grid;
+	gap: 24px;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 1023px) {
+	.card-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 767px) {
+	.card-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* One capability card. */
+.card {
+	background: var(--white);
+	border: 1px solid var(--line);
+	display: flex;
+	flex-direction: column;
+}
+
+.card:hover, .card:focus-within {
+	border-color: var(--navy-900);
+}
+
+/* Photograph on a capability card. */
+.card-media {
+	aspect-ratio: 3 / 2;
+	display: block;
+	overflow: hidden;
+}
+
+/* Photographs crop to fill the card, project row, and Built here frame. */
+.card-media img, .project > img, .built-aside > img {
+	display: block;
+	height: 100%;
+	object-fit: cover;
+	width: 100%;
+}
+
+.card-media img {
+	height: 100%;
+}
+
+/* Text area of a capability card. */
+.card-body {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 20px;
+	padding: 32px;
+}
+
+/* Capability card title. */
+.card h3 {
+	font-family: var(--font-display);
+	font-size: clamp(28px, 2.083vw, 40px);
+	font-weight: 700;
+	letter-spacing: -0.04em;
+	line-height: 1.2;
+	min-height: 96px;
+}
+
+@media (max-width: 1023px) {
+	.card h3 {
+		min-height: 0;
+	}
+}
+
+/* Capability title link. */
+.card h3 a {
+	color: var(--navy-900);
+	text-decoration: none;
+}
+
+/* Capability card description. */
+.card-body p, .card-body > div {
+	color: var(--grey-700);
+	flex: 1;
+}
+
+/* Space under the Why Streamline heading. */
+.why .section-heading {
+	margin-bottom: 40px;
+}
+
+/* Six Why Streamline tiles. */
+.reason-grid {
+	border-left: 1px solid var(--line-inverse);
+	border-top: 1px solid var(--line-inverse);
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 1023px) {
+	.reason-grid {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+@media (max-width: 767px) {
+	.reason-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* One Why Streamline tile. */
+.reason-grid li {
+	border-bottom: 1px solid var(--line-inverse);
+	border-right: 1px solid var(--line-inverse);
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 32px 32px 40px;
+}
+
+/* Orange index on a Why Streamline tile. */
+.reason-index {
+	color: var(--orange-500);
+	font-size: 12px;
+	line-height: 1.4;
+	text-transform: uppercase;
+}
+
+/* Why Streamline tile title. */
+.reason-grid h3 {
+	font-family: var(--font-display);
+	font-size: 24px;
+	font-weight: 600;
+	letter-spacing: -0.04em;
+	line-height: 1.32;
+}
+
+/* Why Streamline tile body. */
+.reason-grid li > div, .reason-grid li > div p {
+	color: var(--navy-200);
+}
+
+/* Stat strip under the Why Streamline tiles. */
+.stats {
+	border: 1px solid var(--line-inverse);
+	display: grid;
+	grid-template-columns: repeat(5, minmax(0, 1fr));
+	margin-top: -1px;
+}
+
+@media (max-width: 1023px) {
+	.stats {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+@media (max-width: 767px) {
+	.stats {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* One stat. */
+.stats > div {
+	border-left: 1px solid var(--line-inverse);
+	padding: 60px 16px;
+	text-align: center;
+}
+
+@media (max-width: 1023px) {
+	.stats > div {
+		border-left: 0;
+		border-top: 1px solid var(--line-inverse);
+	}
+}
+
+@media (max-width: 767px) {
+	.stats > div {
+		border-left: 0;
+		border-top: 1px solid var(--line-inverse);
+	}
+}
+
+.stats > div:first-child {
+	border-left: 0;
+}
+
+@media (max-width: 767px) {
+	.stats > div:first-child {
+		border-top: 0;
+	}
+}
+
+/* Stat label. */
+.stats dt {
+	color: var(--navy-200);
+	font-size: 12px;
+	line-height: 1.4;
+	text-transform: uppercase;
+}
+
+/* Stat figure and suffix. */
+.stats dd {
+	align-items: baseline;
+	display: flex;
+	gap: 4px;
+	justify-content: center;
+	margin-top: 12px;
+	white-space: nowrap;
+}
+
+/* Shared type for the stat number and its suffix. */
+.stat-figure, .stat-suffix {
+	font-family: var(--font-display);
+	font-weight: 700;
+	letter-spacing: -0.04em;
+}
+
+/* Stat number. */
+.stat-figure {
+	color: var(--white);
+	font-size: clamp(36px, 3.2vw, 64px);
+	line-height: 1;
+}
+
+/* Orange suffix on a stat, such as + or %. */
+.stat-suffix {
+	color: var(--orange-600);
+	font-size: clamp(22px, 2vw, 40px);
+	line-height: 1.2;
+}
+
+/* Section heading with the intro beside it. */
+.section-intro {
+	align-items: flex-end;
+	gap: 64px;
+	margin-bottom: 64px;
+}
+
+@media (max-width: 1199px) {
+	.section-intro {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 32px;
+	}
+}
+
+/* Heading width when an intro sits beside it. */
+.section-intro .section-heading {
+	max-width: 1045px;
+}
+
+/* Intro copy beside a section heading. */
+.section-intro > div, .section-intro > p {
+	color: var(--grey-700);
+	max-width: 587px;
+}
+
+@media (max-width: 1199px) {
+	.section-intro > div, .section-intro > p {
+		max-width: none;
+	}
+}
+
+/* Six delivery stages. */
+.stage-grid {
+	border-bottom: 1px solid var(--line);
+	border-right: 1px solid var(--line);
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 1023px) {
+	.stage-grid {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+@media (max-width: 767px) {
+	.stage-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* One delivery stage. */
+.stage {
+	background: var(--white);
+	border-left: 1px solid var(--line);
+	border-top: 1px solid var(--line);
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	min-height: 265px;
+	padding: 32px 32px 40px;
+}
+
+.stage:hover, .stage:focus-visible {
+	background: var(--orange-50);
+}
+
+/* Stage number and arrow row. */
+.stage-top {
+	align-items: center;
+	display: flex;
+	gap: 12px;
+	justify-content: space-between;
+}
+
+/* Stage number and the parallel chip. */
+.stage-top p {
+	align-items: center;
+	display: flex;
+	gap: 12px;
+}
+
+/* Orange stage number. */
+.stage-index {
+	color: var(--orange-500);
+	font-family: var(--font-display);
+	font-size: 16px;
+	font-weight: 700;
+	letter-spacing: -0.04em;
+	line-height: 1;
+}
+
+/* Arrow on a delivery stage. */
+.stage .icon {
+	height: 16px;
+	width: 16px;
+}
+
+/* Runs in parallel chip on stages 02 and 03. */
+.parallel {
+	align-items: center;
+	background: var(--orange-50);
+	border: 1px solid var(--orange-500);
+	color: var(--navy-900);
+	display: inline-flex;
+	font-size: 10px;
+	font-weight: 600;
+	gap: 4px;
+	line-height: 1.4;
+	padding: 2px 6px;
+	text-transform: uppercase;
+}
+
+/* Mark inside the parallel chip. */
+.parallel .icon {
+	height: 8px;
+	width: 8px;
+}
+
+/* Delivery stage title. */
+.stage h3 {
+	color: var(--navy-900);
+	font-family: var(--font-display);
+	font-size: 32px;
+	font-weight: 600;
+	letter-spacing: -0.04em;
+	line-height: 1.24;
+}
+
+@media (max-width: 767px) {
+	.stage h3 {
+		font-size: 28px;
+	}
+}
+
+/* Delivery stage body. */
+.stage > div, .stage > div p {
+	color: var(--grey-700);
+}
+
+/* Bar under a section that holds the orange action. */
+.section-bar {
+	border-top: 1px solid var(--line);
+	display: flex;
+	height: 64px;
+	justify-content: flex-end;
+	margin-top: var(--section);
+	padding-inline: max(var(--gutter), calc((100vw - var(--content)) / 2));
+}
+
+@media (max-width: 767px) {
+	.section-bar {
+		height: auto;
+		justify-content: flex-start;
+	}
+}
+
+/* How we deliver and Related projects. The action bar is the bottom edge. */
+.delivery, .projects {
+	padding-bottom: 0;
+}
+
+/* Space between the section copy and its action bar. */
+.delivery .wrap, .projects .wrap {
+	margin-bottom: var(--section);
+}
+
+/* Action bar sits flush under the section copy. */
+.projects .section-bar, .delivery .section-bar {
+	margin-top: 0;
+}
+
+/* Orange action button in a section bar. */
+.bar-link {
+	align-items: center;
+	background: var(--orange-500);
+	color: var(--navy-900);
+	display: inline-flex;
+	font-size: 16px;
+	font-weight: 600;
+	gap: 8px;
+	height: 100%;
+	justify-content: center;
+	line-height: 1.4;
+	text-decoration: none;
+	text-transform: uppercase;
+	transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease);
+	width: 264px;
+}
+
+/* Orange buttons shift to navy, with white type. */
+.bar-link:hover,
+.bar-link:focus-visible {
+	background: var(--navy-900);
+	color: var(--white);
+}
+
+@media (max-width: 767px) {
+	.bar-link {
+		min-height: 64px;
+		width: min(100%, 360px);
+	}
+}
+
+/* One related project: photograph, summary, and details. */
+.project {
+	align-items: center;
+	border-bottom: 1px solid var(--line);
+	display: grid;
+	gap: 48px;
+	grid-template-columns: minmax(0, 716fr) minmax(0, 572fr) minmax(220px, 424fr);
+	padding: 40px 0;
+}
+
+@media (max-width: 1199px) {
+	.project {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* Project photograph. */
+.project > img {
+	aspect-ratio: 3 / 2;
+	height: auto;
+}
+
+@media (max-width: 1199px) {
+	.project > img {
+		aspect-ratio: 16 / 10;
+	}
+}
+
+/* Project title. */
+.project h3 {
+	color: var(--navy-900);
+	font-family: var(--font-display);
+	font-size: clamp(28px, 2.083vw, 40px);
+	font-weight: 700;
+	letter-spacing: -0.04em;
+	line-height: 1.2;
+}
+
+/* Capability chips on a project. */
+.chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 20px;
+}
+
+/* One project chip. */
+.chips li {
+	border: 1px solid var(--line);
+	color: var(--grey-700);
+	font-size: 12px;
+	line-height: 1.4;
+	padding: 4px 8px;
+	text-transform: uppercase;
+}
+
+/* One project detail row: sector, client, or location. */
+.project-spec dl > div {
+	border-bottom: 1px solid var(--line);
+	display: flex;
+	gap: 24px;
+	padding: 12px 0;
+}
+
+@media (max-width: 767px) {
+	.project-spec dl > div {
+		flex-direction: column;
+		gap: 4px;
+	}
+}
+
+/* Project detail list. */
+.project-spec dl {
+	border-top: 1px solid var(--line);
+}
+
+/* Project detail label. */
+.project-spec dt {
+	color: var(--grey-500);
+	flex: none;
+	font-size: 12px;
+	line-height: 1.4;
+	text-transform: uppercase;
+	width: 160px;
+}
+
+/* Project detail value. */
+.project-spec dd {
+	letter-spacing: -0.04em;
+}
+
+/* Space above the project PDF action. */
+.project-spec .text-link, .pdf-pending {
+	margin-top: 24px;
+}
+
+/* Shown when a project PDF has not been added yet. */
+.pdf-pending {
+	color: var(--grey-700);
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+/* Clients: heading beside the logo grid. */
+.clients-layout {
+	align-items: flex-start;
+}
+
+@media (max-width: 1199px) {
+	.clients-layout {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 32px;
+	}
+}
+
+/* Clients heading. Id hook: #clients_heading. */
+.clients h2 {
+	color: var(--navy-900);
+	flex: 0 0 434px;
+	font-family: var(--font-display);
+	font-size: clamp(28px, 2.083vw, 40px);
+	font-weight: 700;
+	letter-spacing: -0.04em;
+	line-height: 1.16;
+	max-width: 432px;
+	width: min(434px, 100%);
+}
+
+@media (max-width: 1199px) {
+	.clients h2 {
+		flex-basis: auto;
+	}
+}
+
+/* Selected clients label and logo grid. */
+.client-proof {
+	flex: 1;
+	width: min(1196px, 100%);
+}
+
+/* Selected clients label. */
+.client-proof > p {
+	font-size: 12px;
+	margin-bottom: 24px;
+	text-transform: uppercase;
+}
+
+/* Client logo grid. */
+.logo-grid {
+	display: grid;
+	grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+@media (max-width: 1023px) {
+	.logo-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 767px) {
+	.logo-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* One client logo cell. */
+.logo-grid li {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	min-height: 88px;
+	padding: 8px;
+}
+
+@media (max-width: 767px) {
+	.logo-grid li {
+		min-height: 72px;
+	}
+}
+
+/* Client logo. It stays inside the cell. */
+.logo-grid img {
+	height: auto;
+	max-height: 56px;
+	max-width: 100%;
+	object-fit: contain;
+	width: auto;
+}
+
+/* Built here: statement beside the photograph and product links. */
+.built-layout {
+	align-items: center;
+	gap: 64px;
+}
+
+@media (max-width: 1023px) {
+	.built-layout {
+		align-items: stretch;
+		flex-direction: column;
+	}
+}
+
+/* Built here statement. */
+.built-copy {
+	width: min(892px, 54%);
+}
+
+@media (max-width: 1023px) {
+	.built-copy {
+		width: 100%;
+	}
+}
+
+/* Built here headline. Id hook: #built_heading. */
+.built-copy h2 {
+	font-family: var(--font-display);
+	font-size: clamp(48px, 5.833vw, 112px);
+	font-weight: 700;
+	letter-spacing: -0.04em;
+	line-height: 1.08;
+}
+
+/* Built here supporting text. */
+.built-copy > div, .built-copy > div p, .built-copy p {
+	color: var(--navy-200);
+	font-size: clamp(16px, 1.042vw, 20px);
+	line-height: 1.5;
+	margin: 40px 0;
+	max-width: 740px;
+}
+
+/* Built here photograph and product links. */
+.built-aside {
+	width: min(740px, 42%);
+}
+
+@media (max-width: 1023px) {
+	.built-aside {
+		width: 100%;
+	}
+}
+
+/* Built here photograph. */
+.built-aside > img {
+	aspect-ratio: 3 / 2;
+	height: auto;
+}
+
+/* Product links under the Built here photograph. */
+.product-links {
+	border-top: 1px solid var(--line-inverse);
+	margin-top: 24px;
+}
+
+/* One Built here product link. */
+.product-links a {
+	align-items: flex-start;
+	border-bottom: 1px solid var(--line-inverse);
+	color: var(--navy-200);
+	display: flex;
+	gap: 16px;
+	justify-content: space-between;
+	padding: 16px 0;
+	text-decoration: none;
+}
+
+/* Arrow on a Built here product link. */
+.product-links a .icon {
+	height: 20px;
+	margin-top: 2px;
+	width: 20px;
+}
+
+/* Built here product name. */
+.product-links strong {
+	color: var(--white);
+	display: block;
+	font-family: var(--font-display);
+	font-size: 20px;
+	font-weight: 600;
+	letter-spacing: -0.04em;
+	line-height: 1.24;
+	margin-bottom: 8px;
+}
+
+.product-links a:hover, .product-links a:focus-visible {
+	color: var(--white);
+}
+
+/* Orange project enquiry band. */
+.enquiry {
+	background: var(--orange-500);
+	padding: var(--section) 0;
+}
+
+/* Enquiry headline beside the note and button. */
+.enquiry-layout {
+	align-items: center;
+	gap: 32px;
+}
+
+@media (max-width: 1023px) {
+	.enquiry-layout {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+}
+
+/* Enquiry headline. Id hook: #enquiry_heading. */
+.enquiry h2 {
+	color: var(--navy-900);
+	font-family: var(--font-display);
+	font-size: clamp(36px, 3.75vw, 72px);
+	font-weight: 700;
+	letter-spacing: -0.04em;
+	line-height: 1.1;
+	width: min(1045px, 55%);
+}
+
+@media (max-width: 1023px) {
+	.enquiry h2 {
+		align-items: flex-start;
+		width: 100%;
+	}
+}
+
+/* Enquiry note and button. */
+.enquiry-copy {
+	align-items: flex-end;
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+	width: min(739px, 42%);
+}
+
+@media (max-width: 1023px) {
+	.enquiry-copy {
+		align-items: flex-start;
+		width: 100%;
+	}
+}
+
+/* Enquiry supporting text. */
+.enquiry-copy > div, .enquiry-copy > div p, .enquiry-copy p {
+	color: var(--navy-900);
+	font-size: clamp(16px, 1.042vw, 20px);
+	line-height: 1.5;
+	text-align: right;
+}
+
+@media (max-width: 1023px) {
+	.enquiry-copy > div, .enquiry-copy > div p, .enquiry-copy p {
+		text-align: left;
+	}
+}
+
+/* Discuss button in the enquiry band. */
+.enquiry .btn {
+	min-height: 62px;
+	width: 264px;
+}
+
+@media (max-width: 1023px) {
+	.enquiry .btn {
+		width: min(100%, 360px);
+	}
+}
+
+/* Site footer. */
+.site-footer {
+	background: var(--white);
+	border-top: 1px solid var(--line);
+}
+
+/* Footer brand and link columns. */
+.footer-top {
+	align-items: stretch;
+	border-bottom: 1px solid var(--line);
+	gap: 32px;
+}
+
+@media (max-width: 1023px) {
+	.footer-top {
+		flex-direction: column;
+		gap: 0;
+	}
+}
+
+/* Footer logo and accreditation marks. */
+.footer-brand {
+	display: flex;
+	flex: 1.4;
+	flex-direction: column;
+	gap: 40px;
+	padding: 80px 0;
+	width: min(744px, 100%);
+}
+
+/* Footer logo sits on the footer padding, not the header inset. */
+.footer-brand .logo {
+	max-width: none;
+	padding-left: 0;
+}
+
+/* Small uppercase label in the footer. */
+.accreditations p, .footer-col > p {
+	color: var(--grey-700);
+	font-size: 12px;
+	line-height: 1.4;
+	text-transform: uppercase;
+}
+
+/* Accreditations and licences label. */
+.accreditations p {
+	color: var(--ink);
+	margin-bottom: 24px;
+}
+
+/* Row of accreditation marks. */
+.accreditations ul {
+	display: flex;
+	gap: 16px;
+}
+
+/* One accreditation mark. */
+.accreditations img {
+	height: 128px;
+	max-width: none;
+	object-fit: contain;
+	width: 58px;
+}
+
+/* Footer link columns. */
+.footer-columns {
+	display: flex;
+	flex: 1;
+}
+
+@media (max-width: 1023px) {
+	.footer-columns {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+@media (max-width: 767px) {
+	.footer-columns {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* One footer link column. */
+.footer-col {
+	border-left: 1px solid var(--line);
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 16px;
+	min-width: 180px;
+	padding: 80px 0 80px 32px;
+}
+
+@media (max-width: 767px) {
+	.footer-col {
+		border-left: 0;
+		border-top: 1px solid var(--line);
+		padding-left: 0;
+	}
+}
+
+/* Footer link text. */
+.footer-col a, .footer-col li {
+	color: var(--navy-900);
+	font-weight: 600;
+	letter-spacing: -0.04em;
+	text-decoration: none;
+}
+
+/* Footer link target size. */
+.footer-col a {
+	align-items: center;
+	display: inline-flex;
+	min-height: 44px;
+}
+
+/* Legal bar under the footer columns. */
+.legal {
+	align-items: stretch;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+/* Copyright and legal links share one size and hit area. */
+.legal-copy, .legal a {
+	align-items: center;
+	color: var(--grey-700);
+	display: flex;
+	font-size: 14px;
+	line-height: 1.4;
+	min-height: 44px;
+	padding: 20px 28px;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+/* Copyright line. */
+.legal-copy {
+	flex: 1;
+	font-weight: 400;
+	padding-left: max(var(--gutter), calc((100vw - var(--content)) / 2));
+}
+
+/* Privacy, terms, accessibility, and back to top. */
+.legal a {
+	border-left: 1px solid var(--line);
+	font-weight: 600;
+}
+
+/* Back to top keeps the content inset on the right. */
+.legal a:last-child {
+	padding-right: max(var(--gutter), calc((100vw - var(--content)) / 2));
+}
+
+.legal a:hover, .legal a:focus-visible {
+	color: var(--navy-900);
+}
+
+/* Interior page frame. */
+.page-main {
+	padding: var(--section) 0;
+}
+
+/* Narrow column for interior page copy. */
+.page-main .narrow {
+	width: min(760px, calc(100% - (var(--gutter) * 2)));
+}
+
+/* Space under an interior page title. */
+.page-main h1 {
+	margin-bottom: 24px;
+}
+
+/* Space between blocks of interior copy. */
+.entry > * + *, .page-main .entry p + p {
+	margin-top: 16px;
+}
+
+/* Interior heading. Industry headings are also the anchor targets. */
+.entry h2, .industry-list h2 {
+	color: var(--navy-900);
+	font-family: var(--font-display);
+	font-size: 24px;
+	font-weight: 600;
+	letter-spacing: -0.04em;
+	line-height: 1.32;
+	margin-top: 32px;
+	scroll-margin-top: 24px;
+}
+
+/* Link inside interior copy. */
+.entry a {
+	color: var(--navy-900);
+}
+
+/* Industry sections on the Industries page. */
+.industry-list {
+	margin-top: 40px;
+}
+
+/* One industry. Ids: #mining, #telco, #energy, #rail, #government. */
+.industry-list li {
+	border-bottom: 1px solid var(--line);
+	padding: 28px 0;
+	scroll-margin-top: 24px;
+}
+
+/* Industry name. */
+.industry-list h2 {
+	color: var(--orange-500);
+	margin-bottom: 8px;
+	margin-top: 0;
+}
+
+.industry-list li:focus {
+	outline: none;
+}
+
+.industry-list li:focus-visible {
+	outline: 2px solid var(--orange-500);
+	outline-offset: 4px;
+}
