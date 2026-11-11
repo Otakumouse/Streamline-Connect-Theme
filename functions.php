@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require get_template_directory() . '/inc/helpers.php';
 require get_template_directory() . '/inc/content.php';
+require get_template_directory() . '/inc/case-study.php';
 require get_template_directory() . '/inc/acf-fields.php';
 
 /**

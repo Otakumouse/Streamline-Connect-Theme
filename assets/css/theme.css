@@ -1961,3 +1961,315 @@ body:not(.home) .site-header, .site-header.is-menu-open, .site-header.is-capabil
 	outline: 2px solid var(--orange-500);
 	outline-offset: 4px;
 }
+
+/* Case study. Reuses the homepage section rhythm, type, and snapshot rows. */
+
+/* Introduction column. The heading stays within the hero measure. */
+.case-intro-copy {
+	max-width: 1045px;
+}
+
+/* Document label above the case study heading. */
+.case-kicker {
+	color: var(--orange-500);
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.4;
+	margin-top: 24px;
+	text-transform: uppercase;
+}
+
+/* Space under a case study section heading. */
+.case-study .section-heading {
+	margin-bottom: 40px;
+}
+
+/* The introduction heading sits tight to the tagline. Id hook: #case_heading. */
+.case-study .case-intro .section-heading {
+	margin-bottom: 0;
+	margin-top: 16px;
+}
+
+/* Tagline under the outcome heading. */
+.case-tagline {
+	color: var(--grey-700);
+	font-size: clamp(16px, 1.042vw, 20px);
+	line-height: 1.5;
+	margin-top: 24px;
+	max-width: 739px;
+}
+
+/* Snapshot values can run longer than the homepage project column. */
+.case-study .project-spec dd {
+	flex: 1;
+	min-width: 0;
+}
+
+.case-study .project-spec a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.case-study .project-spec a:hover,
+.case-study .project-spec a:focus-visible {
+	color: var(--orange-500);
+}
+
+/* Three photograph frames, in the capability card grid. */
+.case-frame {
+	aspect-ratio: 3 / 2;
+	background: var(--grey-100);
+	border: 1px solid var(--line);
+	display: grid;
+	margin: 0;
+	overflow: hidden;
+}
+
+/* Photograph and the empty prompt share the frame. */
+.case-frame img,
+.case-placeholder {
+	grid-area: 1 / 1;
+	height: 100%;
+	min-height: 0;
+	width: 100%;
+}
+
+.case-frame img {
+	display: block;
+	object-fit: cover;
+}
+
+/* Empty photograph prompt from the case study template. */
+.case-placeholder {
+	align-items: center;
+	color: var(--grey-500);
+	display: flex;
+	font-size: 12px;
+	font-weight: 600;
+	justify-content: center;
+	padding: 16px;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+/* Narrative copy uses the interior page measure, aligned with the section heading. */
+.case-prose {
+	color: var(--grey-700);
+	max-width: 760px;
+}
+
+.case-prose p + p,
+.case-prose li + li {
+	margin-top: 16px;
+}
+
+.case-prose ul,
+.case-prose ol {
+	list-style: disc;
+	margin-top: 16px;
+	padding-left: 1.25em;
+}
+
+.case-prose ol {
+	list-style: decimal;
+}
+
+.case-prose a {
+	color: var(--navy-900);
+}
+
+/* Solution detail sits below the solution narrative. */
+.case-detail {
+	margin-top: 64px;
+}
+
+/* Four solution-detail cells. Borders follow the delivery stages. */
+.case-detail-grid {
+	border-bottom: 1px solid var(--line);
+	border-right: 1px solid var(--line);
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 767px) {
+	.case-detail-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* One solution-detail cell: label, then the answer. */
+.case-detail-grid li {
+	background: var(--white);
+	border-left: 1px solid var(--line);
+	border-top: 1px solid var(--line);
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 32px;
+}
+
+.case-detail-grid li:hover,
+.case-detail-grid li:focus-within {
+	background: var(--orange-50);
+}
+
+/* Programme, delivery package, technical highlight, and scope boundaries. */
+.case-detail-grid h3 {
+	color: var(--grey-500);
+	font-family: var(--font-body);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0;
+	line-height: 1.4;
+	text-transform: uppercase;
+}
+
+.case-detail-grid li > div,
+.case-detail-grid li > div p {
+	color: var(--grey-700);
+}
+
+/* Two quotations. */
+.voice-grid {
+	border-top: 1px solid var(--line-inverse);
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 767px) {
+	.voice-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+.voice-grid blockquote {
+	border-right: 1px solid var(--line-inverse);
+	margin: 0;
+	padding: 40px 40px 0 0;
+}
+
+.voice-grid blockquote:last-child {
+	border-right: 0;
+	padding-left: 40px;
+	padding-right: 0;
+}
+
+@media (max-width: 767px) {
+	.voice-grid blockquote,
+	.voice-grid blockquote:last-child {
+		border-right: 0;
+		border-top: 1px solid var(--line-inverse);
+		padding: 32px 0 0;
+	}
+
+	.voice-grid blockquote:first-child {
+		border-top: 0;
+		padding-top: 32px;
+	}
+}
+
+/* Client quote or Streamline Connect quote. */
+.voice-label {
+	color: var(--orange-500);
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.4;
+	text-transform: uppercase;
+}
+
+/* Quotation. The marks belong to the quote element. */
+.voice-text {
+	margin-top: 20px;
+}
+
+.voice-text p {
+	color: var(--white);
+	font-family: var(--font-display);
+	font-size: clamp(22px, 1.6vw, 28px);
+	font-weight: 600;
+	letter-spacing: -0.04em;
+	line-height: 1.32;
+}
+
+.voice-text p:first-child::before {
+	content: "“";
+}
+
+.voice-text p:last-child::after {
+	content: "”";
+}
+
+/* Name, position, and organisation. */
+.voice-by {
+	color: var(--navy-200);
+	font-size: 14px;
+	line-height: 1.4;
+	margin-top: 24px;
+}
+
+.voice-by span + span::before {
+	content: " | ";
+}
+
+/* Project names on the Projects page. */
+.project-index {
+	margin-top: 40px;
+}
+
+.project-index li {
+	border-bottom: 1px solid var(--line);
+	padding: 8px 0;
+}
+
+.project-index-title {
+	align-items: center;
+	color: var(--navy-900);
+	display: inline-flex;
+	font-family: var(--font-display);
+	font-size: 24px;
+	font-weight: 600;
+	letter-spacing: -0.04em;
+	line-height: 1.32;
+	min-height: 44px;
+	text-decoration: none;
+}
+
+.project-index-title:hover,
+.project-index-title:focus-visible {
+	color: var(--orange-500);
+}
+
+/* Categories under a project name, and on the case study. */
+.project-index-cats {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 16px;
+	margin-top: -4px;
+	padding-bottom: 12px;
+}
+
+.project-index-cats a {
+	color: var(--grey-500);
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.4;
+	min-height: 44px;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+.project-index-cats a:hover,
+.project-index-cats a:focus-visible,
+.case-cats a:hover,
+.case-cats a:focus-visible {
+	color: var(--orange-500);
+}
+
+.case-cats {
+	margin-top: 24px;
+}
+
+.case-cats a {
+	color: inherit;
+	text-decoration: none;
+}

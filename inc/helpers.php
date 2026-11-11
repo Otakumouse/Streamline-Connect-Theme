@@ -12,22 +12,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * The page whose fields feed the home page.
+ * The page whose fields feed the current view.
+ *
+ * A project reads its own fields. Every other view reads the home page.
  *
  * @return int
  */
 function slc_context_id() {
+	$queried = (int) get_queried_object_id();
+	if ( $queried && function_exists( 'slc_is_case_study' ) && slc_is_case_study( $queried ) ) {
+		return $queried;
+	}
+
 	$front = (int) get_option( 'page_on_front' );
 	if ( $front ) {
 		return $front;
 	}
 
-	$queried = (int) get_queried_object_id();
-	if ( $queried ) {
-		return $queried;
-	}
-
-	return 0;
+	return $queried;
 }
 
 /**

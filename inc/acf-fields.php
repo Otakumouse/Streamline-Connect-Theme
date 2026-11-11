@@ -32,10 +32,13 @@ function slc_register_fields() {
 		return;
 	}
 
-	$version  = '2';
+	$version  = '6';
 	$existing = acf_get_field_group( 'group_slc_front_page' );
 	$settings = acf_get_field_group( 'group_slc_theme_settings' );
-	if ( get_option( 'slc_field_group_version' ) === $version && ! empty( $existing['ID'] ) && ! empty( $settings['ID'] ) ) {
+	$case     = acf_get_field_group( 'group_slc_case_study' );
+	$taxonomy = function_exists( 'acf_get_taxonomy' ) ? acf_get_taxonomy( 'taxonomy_slc_project_category' ) : array();
+	$taxonomy = is_array( $taxonomy ) ? $taxonomy : array();
+	if ( get_option( 'slc_field_group_version' ) === $version && ! empty( $existing['ID'] ) && ! empty( $settings['ID'] ) && ! empty( $case['ID'] ) && ! empty( $taxonomy['ID'] ) ) {
 		return;
 	}
 
@@ -50,6 +53,12 @@ function slc_register_fields() {
 		$theme['ID'] = (int) $settings['ID'];
 	}
 	acf_import_field_group( $theme );
+
+	$case_group = slc_case_study_field_group();
+	if ( ! empty( $case['ID'] ) ) {
+		$case_group['ID'] = (int) $case['ID'];
+	}
+	acf_import_field_group( $case_group );
 
 	update_option( 'slc_field_group_version', $version, false );
 }
@@ -72,9 +81,10 @@ function slc_collect_fields( $scope ) {
 			continue;
 		}
 
-		$key = 'field_slc_' . $item['name'];
+		$key   = 'field_slc_' . $item['name'];
+		$notes = isset( $item['instructions'] ) ? trim( (string) $item['instructions'] ) : '';
 		if ( 'image' === $item['type'] ) {
-			$fields[] = array(
+			$field = array(
 				'key'           => $key,
 				'label'         => $item['label'],
 				'name'          => $item['name'],
@@ -84,7 +94,12 @@ function slc_collect_fields( $scope ) {
 				'library'       => 'all',
 				'mime_types'    => 'jpg, jpeg, png, svg, webp',
 			);
+			if ( '' !== $notes ) {
+				$field['instructions'] = $notes;
+			}
+			$fields[] = $field;
 		} elseif ( 'wysiwyg' === $item['type'] ) {
+			$format = 'inline' === $item['toolbar'] ? 'Use italic for emphasis. The Text tab accepts HTML.' : 'Format the copy here, or use the Text tab for HTML.';
 			$fields[] = array(
 				'key'           => $key,
 				'label'         => $item['label'],
@@ -94,16 +109,39 @@ function slc_collect_fields( $scope ) {
 				'tabs'          => 'all',
 				'toolbar'       => $item['toolbar'],
 				'media_upload'  => 0,
-				'instructions'  => 'inline' === $item['toolbar'] ? 'Use italic for emphasis. The Text tab accepts HTML.' : 'Format the copy here, or use the Text tab for HTML.',
+				'instructions'  => '' !== $notes ? $format . ' ' . $notes : $format,
 			);
+		} elseif ( 'taxonomy' === $item['type'] ) {
+			$field = array(
+				'key'           => $key,
+				'label'         => $item['label'],
+				'name'          => $item['name'],
+				'type'          => 'taxonomy',
+				'taxonomy'      => 'project_category',
+				'field_type'    => 'checkbox',
+				'add_term'      => 1,
+				'save_terms'    => 1,
+				'load_terms'    => 1,
+				'return_format' => 'object',
+				'multiple'      => 0,
+				'allow_null'    => 1,
+			);
+			if ( '' !== $notes ) {
+				$field['instructions'] = $notes;
+			}
+			$fields[] = $field;
 		} else {
-			$fields[] = array(
+			$field = array(
 				'key'           => $key,
 				'label'         => $item['label'],
 				'name'          => $item['name'],
 				'type'          => 'text',
 				'default_value' => $item['default'],
 			);
+			if ( '' !== $notes ) {
+				$field['instructions'] = $notes;
+			}
+			$fields[] = $field;
 		}
 
 		if ( empty( $item['plain'] ) ) {
@@ -203,15 +241,16 @@ function slc_class_id_fields( $key, $name, $label ) {
  */
 function slc_field_catalog() {
 	$items = array();
-	$add   = function ( $type, $name, $label, $default = '', $toolbar = 'basic', $plain = false, $scope = 'home' ) use ( &$items ) {
+	$add   = function ( $type, $name, $label, $default = '', $toolbar = 'basic', $plain = false, $scope = 'home', $instructions = '' ) use ( &$items ) {
 		$items[] = array(
-			'type'    => $type,
-			'name'    => $name,
-			'label'   => $label,
-			'default' => $default,
-			'toolbar' => $toolbar,
-			'plain'   => $plain,
-			'scope'   => $scope,
+			'type'         => $type,
+			'name'         => $name,
+			'label'        => $label,
+			'default'      => $default,
+			'toolbar'      => $toolbar,
+			'plain'        => $plain,
+			'scope'        => $scope,
+			'instructions' => $instructions,
 		);
 	};
 
@@ -347,7 +386,50 @@ function slc_field_catalog() {
 	$add( 'text', 'legal_accessibility', 'Accessibility label', 'Accessibility', 'basic', false, 'theme' );
 	$add( 'text', 'legal_top', 'Back to top label', 'Back to top ↑', 'basic', false, 'theme' );
 
+	if ( function_exists( 'slc_case_field_catalog' ) ) {
+		$items = array_merge( $items, slc_case_field_catalog() );
+	}
+
 	return $items;
+}
+
+/**
+ * Project case study fields. Shown when editing a Project.
+ *
+ * @return array<string, mixed>
+ */
+function slc_case_study_field_group() {
+	$fields   = slc_collect_fields( 'case' );
+	$fields[] = array(
+		'key'       => 'field_slc_case_approval_note',
+		'label'     => 'Approval note',
+		'name'      => 'case_approval_note',
+		'type'      => 'message',
+		'message'   => 'Use only verified project details, approved client names, approved images and authorised quotations.',
+		'new_lines' => 'wpautop',
+		'esc_html'  => 0,
+	);
+
+	return array(
+		'key'                   => 'group_slc_case_study',
+		'title'                 => 'Project',
+		'fields'                => $fields,
+		'location'              => array(
+			array(
+				array(
+					'param'    => 'post_type',
+					'operator' => '==',
+					'value'    => 'project',
+				),
+			),
+		),
+		'hide_on_screen'        => array( 'the_content', 'excerpt', 'discussion', 'comments', 'revisions', 'author', 'format', 'featured_image', 'categories', 'tags', 'send-trackbacks' ),
+		'position'              => 'acf_after_title',
+		'style'                 => 'default',
+		'label_placement'       => 'top',
+		'instruction_placement' => 'label',
+		'active'                => true,
+	);
 }
 
 add_action( 'init', 'slc_register_settings_type' );
